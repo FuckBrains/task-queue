@@ -1,10 +1,7 @@
 from flask import Flask
 from celery import Celery
-from .database import Database
+from .config import Config
 import os
-
-# database = Database(os.getenv("PG_USER"), os.getenv("PG_PASSWORD"),
-#                     os.getenv("PG_HOST"), os.getenv("PG_PORT"), os.getenv("PG_DATABASE"))
 
 
 def make_celery(app):
@@ -25,6 +22,7 @@ def make_celery(app):
 
 
 app = Flask(__name__)
+app.config.from_object(Config)
 app.config.update(
     CELERY_BROKER_URL='redis://localhost:6379/0',
     CELERY_RESULT_BACKEND='redis://localhost:6379/0'

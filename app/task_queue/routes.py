@@ -1,12 +1,14 @@
+from flask import render_template, request
 from .. import app
-from .tasks import addition, random_numbers
 
 
-@app.route("/")
+@app.route("/", methods=["GET", "POST"])
 def index():
-    result = addition.delay(2, 5)
-    print(result.get())
-    new = random_numbers.delay()
-    print(new.get())
-    return "Sent"
-
+    if request.method == "GET":
+        return render_template("index.html")
+    
+    
+@app.route("/send-email", methods=["GET", "POST"])
+def send_email():
+    if request.method == "GET":
+        return render_template("send_email.html")
