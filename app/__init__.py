@@ -1,5 +1,6 @@
 from flask import Flask
 from celery import Celery
+from flask_mail import Mail
 from .config import Config
 import os
 
@@ -28,5 +29,6 @@ app.config.update(
     CELERY_RESULT_BACKEND='redis://localhost:6379/0'
 )
 celery = make_celery(app)
+mail = Mail(app)
 
 from . import task_queue

@@ -1,6 +1,26 @@
 {% extends 'base.html' %} {% block content %}
 <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
   <h1 class="h2 align-items-center pt-3 pb-2 mb-3 border-bottom">Send email</h1>
+  <form method="POST">
+    <div class="form-group">
+      <label for="exampleInputEmail1">Email address</label>
+      <input
+        type="email"
+        class="form-control"
+        name="email"
+        placeholder="Example: user@domain.com"
+      />
+      <div class="row mt-3">
+        <button type="submit" name="submit" value="send" class="btn btn-primary col mx-3">
+          Send now
+        </button>
+        <button type="submit" name="submit" value="send-1-minute" class="btn btn-primary col mx-3">
+          Send after 1 minute
+        </button>
+      </div>
+    </div>
+  </form>
+  <hr />
   <div class="task-list">
     <div class="task">
       <h5>Task 1</h5>
@@ -8,8 +28,12 @@
         <div class="progress-bar progress-bar-striped" role="progressbar" style="width: 32%;"></div>
       </div>
     </div>
+    <hr>
     <div class="task">
-      <h5>Task 3</h5>
+      <div class="row mx-1 justify-content-between">
+        <h5>Task 3</h5>
+        <h6>Status: starting</h6>
+      </div>
       <div class="progress">
         <div
           class="progress-bar progress-bar-striped bg-success"
