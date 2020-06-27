@@ -7,7 +7,7 @@ import time
 def send_async_email(self, email_data):
     msg = Message(subject=email_data['subject'],
                   sender=app.config["MAIL_DEFAULT_SENDER"],
-                  recipients=[email_data['to']],
+                  recipients=email_data['to'],
                   body=email_data['body'])
     with app.app_context():
         mail.send(msg)
@@ -16,4 +16,4 @@ def send_async_email(self, email_data):
         self.update_state(state="PROGRESS", meta={'current': i, 'total': 100, 'status': 'Sending'})
         time.sleep(0.03)
 
-    return {'current': 100, 'total': 100, 'status': 'Sent to ' + email_data['to']}
+    return {'current': 100, 'total': 100, 'status': 'Sent to ' + ", ".join(email_data['to'])}
