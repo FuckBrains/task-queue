@@ -8,7 +8,7 @@
           class="list-group-item list-group-item-action active"
           id="list-home-list"
           data-toggle="list"
-          href="#list-home"
+          href="#list-email"
           role="tab"
           aria-controls="home"
           >Send email</a
@@ -17,10 +17,10 @@
           class="list-group-item list-group-item-action"
           id="list-profile-list"
           data-toggle="list"
-          href="#list-profile"
+          href="#list-watermark"
           role="tab"
           aria-controls="profile"
-          >Profile</a
+          >Watermark video</a
         >
         <a
           class="list-group-item list-group-item-action"
@@ -46,23 +46,21 @@
       <div class="tab-content" id="nav-tabContent">
         <div
           class="tab-pane fade show active"
-          id="list-home"
+          id="list-email"
           role="tabpanel"
           aria-labelledby="list-home-list"
         >
-        Send email instantly or after minute. Will be a possibility to send up to 5 emails.
-        <br>
-        <a href="/tasks/send-email">Go to task</a>
+          Send email instantly or after minute. Will be a possibility to send up to 5 emails.
+          <br />
+          <a href="/tasks/send-email">Go to task</a>
         </div>
         <div
           class="tab-pane fade"
-          id="list-profile"
+          id="list-watermark"
           role="tabpanel"
           aria-labelledby="list-profile-list"
         >
-          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Mollitia cupiditate dignissimos
-          voluptatum neque, debitis tenetur quod totam. Perspiciatis odio dicta facilis corrupti,
-          rerum voluptatibus architecto ipsum expedita ad accusamus! Culpa.
+          Make watermark to video with your customization.
         </div>
         <div
           class="tab-pane fade"
@@ -86,30 +84,3 @@
 </main>
 {% endblock content %}
 
-<!-- <button type="button" class="btn" data-toggle="modal" data-target="#sendEmail">
-  Send email
-</button>
-<div class="modal fade" id="sendEmail" tabindex="-1" role="dialog">
-  <div class="modal-dialog" role="document">
-    <form class="form-group" method="POST">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Enter email</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-          <p>Send email to: <input type="text" class="form-control" name="email" /></p>
-          <input type="hidden" name="task" value="send_email" />
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">
-            Close
-          </button>
-          <button type="submit" name="submit" class="btn btn-primary">Send</button>
-        </div>
-      </div>
-    </form>
-  </div>
-</div> -->

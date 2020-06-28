@@ -6,34 +6,69 @@
       <div class="row justify-content-between mx-1">
         <label for="exampleInputEmail1">Email address</label>
         <div>
-          <button onclick="addEmail()" type="button" class="btn btn-warning btn-sm" style="padding: 2px; height: 1.7rem">Add </button>
-          <button onclick="removeEmail()" type="button" class="btn btn-danger btn-sm" style="padding: 2px; height: 1.7rem">Remove</button>
+          <button
+            id="addEmail"
+            type="button"
+            class="btn btn-warning btn-sm"
+            style="padding: 2px; height: 1.7rem;"
+          >
+            Add
+          </button>
+          <button
+            id="removeEmail"
+            type="button"
+            class="btn btn-danger btn-sm"
+            style="padding: 2px; height: 1.7rem;"
+          >
+            Remove
+          </button>
         </div>
       </div>
       <div class="email-list">
         <input
-        type="email"
-        id="emailId"
-        class="form-control mb-2"
-        name="email"
-        placeholder="Example: user@domain.com"
+          type="email"
+          id="emailId"
+          class="form-control mb-2"
+          name="email"
+          placeholder="Example: user@domain.com"
         />
       </div>
 
       <div class="row justify-content-between mx-1">
         <label for="message-text-area">Message</label>
-        <textarea class="form-control" id="message-textarea" rows="2" placeholder="Example message"></textarea>
+        <textarea
+          class="form-control"
+          id="message-textarea"
+          rows="2"
+          placeholder="Example message"
+        ></textarea>
       </div>
       <div class="row mt-3">
-        <input id="submitIns" onclick="startEmailSendTask('submitIns')" type="button" name="submit" value="Send" class="btn btn-primary col mx-3">
-        <input id="submitMin" onclick="startEmailSendTask('submitMin')" type="button" name="submit" value="Send after 1 minute" class="btn btn-primary col mx-3">
+        <input
+          id="submitIns"
+          type="button"
+          name="submit"
+          value="Send"
+          class="btn btn-primary col mx-3"
+        />
+        <input
+          id="submitMin"
+          type="button"
+          name="submit"
+          value="Send after 1 minute"
+          class="btn btn-primary col mx-3"
+        />
       </div>
       <div class="small m-1"><b>Note:</b> There is only 10 request per hour</div>
     </div>
   </form>
   <hr />
   <div class="task-list">
-    <div class="task">
+    <div class="task"></div>
   </div>
 </main>
-{% endblock content %}
+{% endblock content %} 
+
+{% block scripts %}
+<script type="module" src="../static/js/sendEmail.js"></script>
+{% endblock scripts %}

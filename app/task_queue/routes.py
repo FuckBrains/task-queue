@@ -64,4 +64,17 @@ def send_email():
             args=[email_data], task_id=uuid.uuid4().hex)
     else:
         task = send_async_email.apply_async(args=[email_data], countdown=60)
-    return jsonify({}), 202, {"location": url_for('task_status', task_id=task.id)}
+    return jsonify({"location": url_for('task_status', task_id=task.id)}), 202
+
+
+@app.route("/tasks/watermark-video", methods=["GET", "POST"])
+def watermark_video():
+    if request.method == "GET":
+        return render_template("video_watermark.html")
+    if 'file' not in request.files:
+        return jsonify({'error': "No file part"}), 204
+
+    file = request.files["file"]
+    if file.filename == '':
+        return jsonify({"error": "No selected file"}), 204
+    if file and 

@@ -27,6 +27,9 @@
           <li class="nav-item">
             <a class="nav-link" href="/tasks/send-email">Send email</a>
           </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/tasks/watermark-video">Watermark video</a>
+          </li>
         </ul>
       </div>
     </nav>
@@ -43,6 +46,9 @@
             <ul class="nav flex-column">
               <li class="nav-item">
                 <a class="nav-link" href="/tasks/send-email">Send email</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/tasks/watermark-video">Watermark video</a>
               </li>
             </ul>
           </div>
@@ -65,6 +71,7 @@
       integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
       crossorigin="anonymous"
     ></script>
-    <script src="../static/js/script.js"></script>
+    <script type="module" src="../static/js/script.js"></script>
+    {% block scripts %} {% endblock scripts %}
   </body>
 </html>

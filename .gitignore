@@ -104,10 +104,14 @@ __pypackages__/
 celerybeat-schedule
 celerybeat.pid
 
+# Redis
+dump.rdb
+
 # SageMath parsed files
 *.sage.py
 
 # Environments
+.flaskenv
 *.env
 .venv
 env/

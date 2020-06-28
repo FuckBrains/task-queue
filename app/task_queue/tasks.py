@@ -1,5 +1,6 @@
 from app import celery, app, mail
 from flask_mail import Message
+from moviepy.editor import VideoFileClip
 import time
 
 
@@ -17,3 +18,8 @@ def send_async_email(self, email_data):
         time.sleep(0.03)
 
     return {'current': 100, 'total': 100, 'status': 'Sent to ' + ", ".join(email_data['to'])}
+
+
+@celery.task(bind=True)
+def async_watermark_video(self, video):
+    pass
