@@ -1,13 +1,12 @@
 from flask import render_template, request, url_for, jsonify
-from .. import app
+from .. import app, limiter
 from .tasks import send_async_email
 import uuid
 
 
-@app.route("/", methods=["GET", "POST"])
+@app.route("/")
 def index():
-    if request.method == "GET":
-        return render_template("index.html")
+    return render_template("index.html")
 
 
 @app.route("/status/<task_id>")
@@ -40,10 +39,14 @@ def task_status(task_id):
     return jsonify(response)
 
 
-@app.route("/tasks/send-email", methods=["GET", "POST"])
+@app.route("/tasks/send-email")
+def send_email_get():
+    return render_template("send_email.html")
+
+
+@app.route("/tasks/send-email", methods=["POST"])
+@limiter.limit("10 per hour")
 def send_email():
-    if request.method == "GET":
-        return render_template("send_email.html")
     email = request.form.getlist("email[]")
     message = request.form["message"]
     email_data = {

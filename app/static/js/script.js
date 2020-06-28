@@ -97,8 +97,8 @@ function startEmailSendTask(submit) {
       localStorage.setItem("sendEmail", JSON.stringify(sendEmailArray));
       updateProgress(status_url, div[0]);
     },
-    error: function () {
-      alert("Unexpected error");
+    error: function (request, status, error) {
+      alert(request.status + " " + error);
     },
   });
 }
