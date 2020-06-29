@@ -1,7 +1,15 @@
 from flask import render_template, request, url_for, jsonify
-from .. import app, limiter
-from .tasks import send_async_email
+from werkzeug.utils import secure_filename
 import uuid
+import os
+from .tasks import send_async_email, async_watermark_video
+from .. import app, limiter
+
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower(
+           ) in app.config["ALLOWED_EXTENSIONS"]
 
 
 @app.route("/")
@@ -64,7 +72,7 @@ def send_email():
             args=[email_data], task_id=uuid.uuid4().hex)
     else:
         task = send_async_email.apply_async(args=[email_data], countdown=60)
-    return jsonify({"location": url_for('task_status', task_id=task.id)}), 202
+    return jsonify({}), 202, {"location": url_for('task_status', task_id=task.id)}
 
 
 @app.route("/tasks/watermark-video", methods=["GET", "POST"])
@@ -77,4 +85,9 @@ def watermark_video():
     file = request.files["file"]
     if file.filename == '':
         return jsonify({"error": "No selected file"}), 204
-    if file and 
+    if file and allowed_file(file.filename):
+        filename = secure_filename(file.filename)
+        filepath = os.path.join(app.config["UPLOAD_FOLDER"], filename)
+        file.save(filepath)
+        task = async_watermark_video.apply_async(args=[filepath], task_id=uuid.uuid4().hex)
+        return jsonify({}), 202, {"location": url_for('task_status', task_id=task.id)}

@@ -1,5 +1,6 @@
 import os
-from . import app
+
+APP_ROOT = os.path.dirname(os.path.abspath("..run"))
 
 
 class Config(object):
@@ -9,10 +10,5 @@ class Config(object):
     MAIL_USERNAME = os.environ.get("MAIL_USERNAME")
     MAIL_PASSWORD = os.environ.get("MAIL_PASSWORD")
     MAIL_DEFAULT_SENDER = 'taskqueueapplication@gmail.com'
-    UPLOAD_FOLDER = '../media/'
+    UPLOAD_FOLDER = os.path.join(APP_ROOT, 'app/media')
     ALLOWED_EXTENSIONS = {'mp4', 'webm', 'avi'}
-
-
-def allowed_file(filename):
-    return '.' in filename and \
-           filename.rsplit('.', 1)[1].lower() in app.config["ALLOWED_EXTENSIONS"]

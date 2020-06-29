@@ -43,6 +43,7 @@ export function getRandomColor() {
 // update progress of progress bars
 export function updateProgress(status_url, status_div) {
   $.getJSON(status_url, function (data) {
+    console.log(data)
     let percent = parseInt(data["current"]);
     // status
     $(status_div.children[0].children[1].children[0]).text(data["status"]);
