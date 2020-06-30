@@ -11,7 +11,7 @@ let processVideoDict = JSON.parse(localStorage.getItem("processVideo"));
 // display all previous tasks
 if (Object.keys(processVideoDict) != null) {
   Object.keys(processVideoDict).forEach((url) => {
-    let div = getVideoTaskDiv(getRandom(10000), `/uploads/${processVideoDict[url]}`);
+    let div = getVideoTaskDiv(getRandom(10000), processVideoDict[url]);
     updateProgress(url, div[0]);
     $(".task-list").prepend(div);
   });
@@ -28,7 +28,6 @@ $("#inputGroupFileAddon04").click(() => {
   // //get video file
   var formData = new FormData($("#upload-video")[0]);
   var optionData = $("#edit-options").serializeArray();
-  console.log(optionData)
   optionData.forEach((e) => {
     formData.append(e.name, e.value)
   })

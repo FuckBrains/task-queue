@@ -27,8 +27,9 @@ def send_async_email(self, email_data):
 @celery.task(bind=True)
 def async_process_video(self, filepath, filename, options):
     # Video
-    clip = VideoFileClip(os.path.join(filepath, filename))
-    if (options['rotation'] != ''):
+    path = os.path.join(filepath, filename)
+    clip = VideoFileClip(path)
+    if (options['rotation'] != '' and options['rotation'].isdigit()):
         clip = clip.add_mask().rotate(int(options['rotation']))
     if options['duration'] != '' and clip.duration > int(options['duration']):
         clip = clip.set_duration(options['duration'])
@@ -42,18 +43,21 @@ def async_process_video(self, filepath, filename, options):
             clip = clip.fx(vfx.blackwhite)
 
     # Text
-    txt_clip = TextClip(txt="Test", fontsize=48,
-                        color="white", font="Arial")
-    # if 'position-x' in options.keys() and 'position-y' in options.keys():
-    #     txt_clip = txt_clip.set_position(
-    #         options['position-x'], options['position-y'])
-    # elif 'position-x' in options.keys():
-    #     txt_clip = txt_clip.set_position(options['position-x'], 'top')
-    # elif 'position-y' in options.keys():
-    #     txt_clip = txt_clip.set_position('left', options['position-y'])
+    if options['watermark'] != '':
+        txt_clip = TextClip(txt=options['watermark'], fontsize=48,
+                            color="white", font="Arial")
+        if 'position-x' in options.keys() and 'position-y' in options.keys():
+            txt_clip = txt_clip.set_position((
+                options['position-x'], options['position-y']))
+        elif 'position-x' in options.keys():
+            txt_clip = txt_clip.set_position((options['position-x'], 'top'))
+        elif 'position-y' in options.keys():
+            txt_clip = txt_clip.set_position(('left', options['position-y']))
 
-    txt_clip = txt_clip.set_duration(clip.duration)
-    video = CompositeVideoClip([clip, txt_clip])
+        txt_clip = txt_clip.set_duration(clip.duration)
+        video = CompositeVideoClip([clip, txt_clip])
+    else:
+        video = clip
     video.write_videofile(
         os.path.join(filepath, "PROCESSED_" + filename),
         audio_codec='aac',
@@ -61,5 +65,5 @@ def async_process_video(self, filepath, filename, options):
         remove_temp=True,
         logger=VideoProgressLogger(self)
     )
-    os.remove(os.path.join(filepath, filename))
-    return {'current': 100, 'total': 100, 'status': "Video processed"}
+    os.remove(path)
+    return {'current': 100, 'total': 100, 'status': f"Video {filename} processed"}

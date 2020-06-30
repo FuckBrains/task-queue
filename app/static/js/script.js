@@ -89,8 +89,13 @@ export function updateProgress(status_url, status_div) {
       if (data["state"] == "SUCCESS") {
         let processVideoDict = JSON.parse(localStorage.getItem("processVideo"));
         if (Object.keys(processVideoDict).includes(status_url)) {
-          processVideoDict[status_url] = data["result"];
+          processVideoDict[status_url] = `/uploads/${data["result"]}`;
           localStorage.setItem("processVideo", JSON.stringify(processVideoDict));
+          $(status_div.children[3].children[1]).attr("href", processVideoDict[status_url]);
+          $(status_div.children[4].children[0].children[0].children[0]).attr(
+            "src",
+            processVideoDict[status_url],
+          );
         }
       }
     } else {
