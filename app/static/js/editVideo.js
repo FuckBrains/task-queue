@@ -17,17 +17,36 @@ if (Object.keys(processVideoDict) != null) {
   });
 }
 
+// display selected file
 $(".custom-file-input").change((e) => {
   let fileName = $("#inputGroupFile02").val().split("\\").pop();
   $(".custom-file-label").text(fileName);
 });
 
+// start task
 $("#inputGroupFileAddon04").click(() => {
+  // //get video file
+  var formData = new FormData($("#upload-video")[0]);
+  var optionData = $("#edit-options").serializeArray();
+  console.log(optionData)
+  optionData.forEach((e) => {
+    formData.append(e.name, e.value)
+  })
+
+  // check video file
+  if (!formData.get("file")["name"].localeCompare("")) {
+    $("#errors-input").empty();
+    $("#errors-input").append("<div class='alert alert-danger' role='alert'>You didn't select video file.</div");
+    return null
+  } else {
+    $("#errors-input").empty();
+  }
+
+  // add progress
   let div = getVideoTaskDiv(getRandom(10000), "#");
    $(".task-list").prepend(div);
 
-  var formData = new FormData($("#upload-video")[0]);
-
+   // start task update
   $.ajax({
     type: "POST",
     url: window.location.pathname,

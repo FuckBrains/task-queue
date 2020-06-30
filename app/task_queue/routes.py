@@ -98,8 +98,9 @@ def process_video():
         filename = secure_filename(file.filename)
         filepath = app.config["UPLOAD_FOLDER"]
         file.save(os.path.join(filepath, filename))
+        options = request.form.to_dict()
         task = async_process_video.apply_async(
-            args=[filepath, filename], task_id=uuid.uuid4().hex)
+            args=[filepath, filename, options], task_id=uuid.uuid4().hex)
         return jsonify({}), 202, {"location": url_for('task_status', task_id=task.id,
                                                       result=filename)}
 

@@ -8,7 +8,6 @@ if (localStorage.getItem("sendEmail") == null) {
 // get local storage task list
 let sendEmailDict = JSON.parse(localStorage.getItem("sendEmail"));
 
-console.log(sendEmailDict)
 
 // display all previous tasks
 if (Object.keys(sendEmailDict) != null) {
