@@ -2,15 +2,17 @@ import { getTaskDiv, updateProgress } from "./script.js";
 
 // init local storage
 if (localStorage.getItem("sendEmail") == null) {
-  localStorage.setItem("sendEmail", "[]");
+  localStorage.setItem("sendEmail", "{}");
 }
 
 // get local storage task list
-let sendEmailArray = JSON.parse(localStorage.getItem("sendEmail"));
+let sendEmailDict = JSON.parse(localStorage.getItem("sendEmail"));
+
+console.log(sendEmailDict)
 
 // display all previous tasks
-if (sendEmailArray != null) {
-  sendEmailArray.forEach((url) => {
+if (Object.keys(sendEmailDict) != null) {
+  Object.keys(sendEmailDict).forEach((url) => {
     let div = getTaskDiv();
     updateProgress(url, div[0]);
     $(".task-list").prepend(div);
@@ -40,8 +42,8 @@ function startEmailSendTask(submit) {
     success: function (data, status, request) {
       $("#message-textarea").val("");
       let status_url = request.getResponseHeader("location");
-      sendEmailArray.push(status_url);
-      localStorage.setItem("sendEmail", JSON.stringify(sendEmailArray));
+      sendEmailDict[status_url] = null;
+      localStorage.setItem("sendEmail", JSON.stringify(sendEmailDict));
       updateProgress(status_url, div[0]);
     },
     error: function (request, status, error) {

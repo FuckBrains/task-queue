@@ -1,4 +1,4 @@
-from flask import render_template, request, url_for, jsonify
+from flask import render_template, request, url_for, jsonify, send_from_directory
 from werkzeug.utils import secure_filename
 import uuid
 import os
@@ -25,24 +25,35 @@ def task_status(task_id):
             'id': task_id,
             'state': process.state,
             'current': 0,
-            'total': 1,
-            'status': "Pending"
+            'total': 100,
+            'status': "Pending",
+            'result': None
         }
+    elif process.state == 'SUCCESS':
+        response = {
+            "id": task_id,
+            'state': process.state,
+            'current': 100,
+            'total': 100,
+            'status': process.info.get('status', ''),
+            'result': request.args.get("result")}
     elif process.state != 'FAILURE':
         response = {
             'id': task_id,
             'state': process.state,
             'current': process.info.get('current', 0),
-            'total': process.info.get('total', 1),
-            'status': process.info.get('status', '')
+            'total': process.info.get('total', 100),
+            'status': process.info.get('status', ''),
+            'result': None
         }
     else:
         response = {
             'id': task_id,
             'state': process.state,
-            'current': 1,
-            'total': 1,
-            'status': str(process.info)
+            'current': 0,
+            'total': 100,
+            'status': "ERROR:" + str(process.info),
+            'result': None
         }
     return jsonify(response)
 
@@ -70,10 +81,14 @@ def send_email():
     return jsonify({}), 202, {"location": url_for('task_status', task_id=task.id)}
 
 
-@app.route("/tasks/edit-video", methods=["GET", "POST"])
+@app.route("/tasks/edit-video")
+def process_video_get():
+    return render_template("edit_video.html")
+
+
+@app.route("/tasks/edit-video", methods=["POST"])
+@limiter.limit("10 per hour")
 def process_video():
-    if request.method == "GET":
-        return render_template("edit_video.html")
     if 'file' not in request.files:
         return jsonify({'error': "No file part"}), 204
     file = request.files["file"]
@@ -85,4 +100,10 @@ def process_video():
         file.save(os.path.join(filepath, filename))
         task = async_process_video.apply_async(
             args=[filepath, filename], task_id=uuid.uuid4().hex)
-        return jsonify({}), 202, {"location": url_for('task_status', task_id=task.id)}
+        return jsonify({}), 202, {"location": url_for('task_status', task_id=task.id,
+                                                      result=filename)}
+
+
+@app.route('/uploads/<filename>')
+def uploaded_file(filename):
+    return send_from_directory(app.config["UPLOAD_FOLDER"], "PROCESSED_" + filename)

@@ -1,17 +1,17 @@
-import { getTaskDiv, updateProgress } from "./script.js";
+import { getVideoTaskDiv, updateProgress, getRandom } from "./script.js";
 
 // init local storage
 if (localStorage.getItem("processVideo") == null) {
-  localStorage.setItem("processVideo", "[]");
+  localStorage.setItem("processVideo", "{}");
 }
 
 // get local storage task list
-let processVideoArray = JSON.parse(localStorage.getItem("processVideo"));
+let processVideoDict = JSON.parse(localStorage.getItem("processVideo"));
 
 // display all previous tasks
-if (processVideoArray != null) {
-  processVideoArray.forEach((url) => {
-    let div = getTaskDiv();
+if (Object.keys(processVideoDict) != null) {
+  Object.keys(processVideoDict).forEach((url) => {
+    let div = getVideoTaskDiv(getRandom(10000), `/uploads/${processVideoDict[url]}`);
     updateProgress(url, div[0]);
     $(".task-list").prepend(div);
   });
@@ -23,7 +23,7 @@ $(".custom-file-input").change((e) => {
 });
 
 $("#inputGroupFileAddon04").click(() => {
-  let div = getTaskDiv();
+  let div = getVideoTaskDiv(getRandom(10000), "#");
    $(".task-list").prepend(div);
 
   var formData = new FormData($("#upload-video")[0]);
@@ -37,8 +37,8 @@ $("#inputGroupFileAddon04").click(() => {
     cache: false,
     success: function (data, status, request) {
       let status_url = request.getResponseHeader("location");
-      processVideoArray.push(status_url);
-      localStorage.setItem("processVideo", JSON.stringify(processVideoArray));
+      processVideoDict[status_url] = null;
+      localStorage.setItem("processVideo", JSON.stringify(processVideoDict));
       updateProgress(status_url, div[0]);
     },
     error: function (request, status, error) {

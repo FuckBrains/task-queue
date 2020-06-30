@@ -1,4 +1,4 @@
-// html task 
+// html task
 export function getTaskDiv() {
   return $(
     `<div class="task">
@@ -11,6 +11,38 @@ export function getTaskDiv() {
                 </div>
             </div>
             <div class="row justify-content-center">0%</div>
+        </div>
+        <hr>`,
+  );
+}
+
+export function getVideoTaskDiv(id, src) {
+  return $(
+    `<div class="task">
+            <div class="row mx-1 justify-content-between">
+                <h6>Task: <span class="small">unknown</span></h6>
+                <h6>Status: <span class="small">starting</span></h6>
+            </div>
+            <div class="progress">
+                <div class="progress-bar progress-bar-striped bg-${getRandomColor()}" role="progressbar" style="width: 0%;">
+                </div>
+            </div>
+            <div class="row justify-content-center">0%</div>
+            <div class="row mx-1">
+              <button class="btn btn-info" type="button" data-toggle="collapse" data-target="#collapse-${id}" aria-expanded="false" aria-controls="collapseExample">
+                Show video
+              </button>
+              <a href="${src}" class="btn btn-success text-white ml-auto" download>
+                Download video
+              </a>
+            </div>
+            <div class="collapse mt-2" id="collapse-${id}">
+              <div class="card card-body">
+                <div class="embed-responsive embed-responsive-16by9">
+                  <video controls class="embed-responsive-item" src="${src}" id="iframe-video" allowfullscreen></video>
+                </div>
+              </div>
+            </div>
         </div>
         <hr>`,
   );
@@ -54,6 +86,13 @@ export function updateProgress(status_url, status_div) {
     $(status_div.children[1].children[0]).css("width", percent + "%");
 
     if (data["state"] != "PENDING" && data["state"] != "PROGRESS") {
+      if (data["state"] == "SUCCESS") {
+        let processVideoDict = JSON.parse(localStorage.getItem("processVideo"));
+        if (Object.keys(processVideoDict).includes(status_url)) {
+          processVideoDict[status_url] = data["result"];
+          localStorage.setItem("processVideo", JSON.stringify(processVideoDict));
+        }
+      }
     } else {
       setTimeout(() => {
         updateProgress(status_url, status_div);
@@ -61,4 +100,3 @@ export function updateProgress(status_url, status_div) {
     }
   });
 }
-
