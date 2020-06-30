@@ -12,6 +12,11 @@ def allowed_file(filename):
            ) in app.config["ALLOWED_EXTENSIONS"]
 
 
+def to_lower_extension(filename):
+    name, extension = os.path.splitext(filename)
+    return name + extension.lower()
+
+
 @app.route("/")
 def index():
     return render_template("index.html")
@@ -96,6 +101,7 @@ def process_video():
         return jsonify({"error": "No selected file"}), 204
     if file and allowed_file(file.filename):
         filename = secure_filename(file.filename)
+        filename = to_lower_extension(filename)
         filepath = app.config["UPLOAD_FOLDER"]
         file.save(os.path.join(filepath, filename))
         options = request.form.to_dict()
@@ -103,6 +109,8 @@ def process_video():
             args=[filepath, filename, options], task_id=uuid.uuid4().hex)
         return jsonify({}), 202, {"location": url_for('task_status', task_id=task.id,
                                                       result=filename)}
+    else:
+        return jsonify({}), 400
 
 
 @app.route('/uploads/<filename>')

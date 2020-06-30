@@ -61,6 +61,7 @@ def async_process_video(self, filepath, filename, options):
     video.write_videofile(
         os.path.join(filepath, "PROCESSED_" + filename),
         audio_codec='aac',
+        codec='libx264',
         temp_audiofile='temp-audio.m4a',
         remove_temp=True,
         logger=VideoProgressLogger(self)

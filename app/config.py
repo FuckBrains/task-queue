@@ -13,5 +13,5 @@ class Config(object):
     MAIL_USERNAME = "taskqueueapplication@gmail.com"
     MAIL_PASSWORD = "firehell8"
     UPLOAD_FOLDER = os.path.join(APP_ROOT, 'app/media')
-    ALLOWED_EXTENSIONS = {'mp4', 'webm', 'avi'}
+    ALLOWED_EXTENSIONS = {'mp4', 'webm', 'avi', 'mov'}
     MAX_CONTENT_LENGTH = 35 * 1024 * 1024
