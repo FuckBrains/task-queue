@@ -26,12 +26,8 @@ def make_celery(app):
 
 app = Flask(__name__)
 app.config.from_object(Config)
-app.config.update(
-    CELERY_BROKER_URL='redis://localhost:6379/0',
-    CELERY_RESULT_BACKEND='redis://localhost:6379/0'
-)
-celery = make_celery(app)
 mail = Mail(app)
+celery = make_celery(app)
 limiter = Limiter(app=app, key_func=get_remote_address)
 
 from . import task_queue

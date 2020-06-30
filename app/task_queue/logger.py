@@ -15,9 +15,9 @@ class VideoProgressLogger(ProgressBarLogger):
         if index > -1:
             bar = list(bars.values())[index]
             progress = int(bar['index'] / bar['total'] * 100)
-            if bar["indent"] == 2:
-                self.task.update_state(state="PROGRESS", meta={
-                    'current': progress, "total": 100, "status": "Processing video"})
-            else:
-                self.task.update_state(state="PROGRESS", meta={
-                    'current': 0, "total": 100, "status": "Preparing for processing"})
+            self.task.update_state(state="PROGRESS", meta={
+                'current': progress, "total": 100, "status": "Processing video"})
+            # if bar["indent"] == 2:
+            # else:
+            #     self.task.update_state(state="PROGRESS", meta={
+            #         'current': 0, "total": 100, "status": "Preparing for processing"})

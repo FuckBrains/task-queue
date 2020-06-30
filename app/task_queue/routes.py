@@ -2,7 +2,7 @@ from flask import render_template, request, url_for, jsonify
 from werkzeug.utils import secure_filename
 import uuid
 import os
-from .tasks import send_async_email, async_watermark_video
+from .tasks import send_async_email, async_process_video
 from .. import app, limiter
 
 
@@ -60,12 +60,7 @@ def send_email():
     email_data = {
         'subject': "Sample message from localhost",
         'to': email,
-        'body': f"""
-        This is a test email sent from a bachground Celery task.
-         Message from anonymous user:
-         "{message}"
-         If there is some problems, please contact with developer.
-         """
+        'body': render_template("email_template.html", message=message)
     }
     if request.form['submit'] == "Send":
         task = send_async_email.apply_async(
@@ -75,19 +70,19 @@ def send_email():
     return jsonify({}), 202, {"location": url_for('task_status', task_id=task.id)}
 
 
-@app.route("/tasks/watermark-video", methods=["GET", "POST"])
-def watermark_video():
+@app.route("/tasks/edit-video", methods=["GET", "POST"])
+def process_video():
     if request.method == "GET":
-        return render_template("video_watermark.html")
+        return render_template("edit_video.html")
     if 'file' not in request.files:
         return jsonify({'error': "No file part"}), 204
-
     file = request.files["file"]
     if file.filename == '':
         return jsonify({"error": "No selected file"}), 204
     if file and allowed_file(file.filename):
         filename = secure_filename(file.filename)
-        filepath = os.path.join(app.config["UPLOAD_FOLDER"], filename)
-        file.save(filepath)
-        task = async_watermark_video.apply_async(args=[filepath], task_id=uuid.uuid4().hex)
+        filepath = app.config["UPLOAD_FOLDER"]
+        file.save(os.path.join(filepath, filename))
+        task = async_process_video.apply_async(
+            args=[filepath, filename], task_id=uuid.uuid4().hex)
         return jsonify({}), 202, {"location": url_for('task_status', task_id=task.id)}
